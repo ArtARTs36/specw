@@ -34,6 +34,10 @@ func (l *SlogLevel) UnmarshalYAML(n *yaml.Node) error {
 	return nil
 }
 
+func (l *SlogLevel) UnmarshalJSON(data []byte) error {
+	return l.Level.UnmarshalJSON(data)
+}
+
 func (l *SlogLevel) mapValue(value string) (slog.Level, bool) {
 	switch strings.ToLower(value) {
 	case "error":
