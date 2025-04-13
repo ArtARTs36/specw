@@ -10,7 +10,7 @@ import (
 )
 
 type URL struct {
-	url.URL
+	Value url.URL
 }
 
 func (u *URL) UnmarshalYAML(n *yaml.Node) error {
@@ -23,7 +23,7 @@ func (u *URL) UnmarshalYAML(n *yaml.Node) error {
 		return fmt.Errorf("invalid url: %w", err)
 	}
 
-	u.URL = *value
+	u.Value = *value
 
 	return err
 }
@@ -42,7 +42,11 @@ func (u *URL) UnmarshalJSON(data []byte) error {
 		return fmt.Errorf("invalid url: %w", err)
 	}
 
-	u.URL = *value
+	u.Value = *value
 
 	return nil
+}
+
+func (u *URL) String() string {
+	return u.Value.String()
 }

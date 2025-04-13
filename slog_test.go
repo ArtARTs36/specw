@@ -50,7 +50,7 @@ func TestSlog_UnmarshallYAML(t *testing.T) {
 			err := yaml.Unmarshal([]byte(test.Content), &spec)
 			require.NoError(t, err)
 
-			assert.Equal(t, test.Expected, spec.LogLevel.Level)
+			assert.Equal(t, test.Expected, spec.LogLevel.Value)
 		})
 	}
 }
@@ -94,7 +94,7 @@ func TestSlog_UnmarshalJSON(t *testing.T) {
 			err := json.Unmarshal([]byte(test.Content), &spec)
 			require.NoError(t, err)
 
-			assert.Equal(t, test.Expected, spec.LogLevel.Level)
+			assert.Equal(t, test.Expected, spec.LogLevel.Value)
 		})
 	}
 }

@@ -11,7 +11,7 @@ import (
 )
 
 type IP struct {
-	net.IP
+	Value net.IP
 }
 
 func (i *IP) UnmarshalYAML(n *yaml.Node) error {
@@ -34,6 +34,10 @@ func (i *IP) UnmarshalJSON(data []byte) error {
 	return i.unmarshalString(v)
 }
 
+func (i *IP) String() string {
+	return i.Value.String()
+}
+
 func (i *IP) unmarshalString(value string) error {
 	addr, err := netip.ParseAddr(value)
 	if err != nil {
@@ -45,7 +49,7 @@ func (i *IP) unmarshalString(value string) error {
 
 	addrBytes := addr.As16()
 
-	i.IP = addrBytes[:]
+	i.Value = addrBytes[:]
 
 	return nil
 }

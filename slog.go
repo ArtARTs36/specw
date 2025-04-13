@@ -9,7 +9,7 @@ import (
 )
 
 type SlogLevel struct {
-	Level slog.Level
+	Value slog.Level
 }
 
 func (l *SlogLevel) UnmarshalYAML(n *yaml.Node) error {
@@ -29,13 +29,21 @@ func (l *SlogLevel) UnmarshalYAML(n *yaml.Node) error {
 		)
 	}
 
-	l.Level = val
+	l.Value = val
 
 	return nil
 }
 
 func (l *SlogLevel) UnmarshalJSON(data []byte) error {
-	return l.Level.UnmarshalJSON(data)
+	return l.Value.UnmarshalJSON(data)
+}
+
+func (l *SlogLevel) String() string {
+	return l.Value.String()
+}
+
+func (l *SlogLevel) Level() slog.Level {
+	return l.Value
 }
 
 func (l *SlogLevel) mapValue(value string) (slog.Level, bool) {

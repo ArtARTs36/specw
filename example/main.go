@@ -19,6 +19,8 @@ const content = `
 url: http://google.com
 ip: 192.168.0.1
 log_level: info
+env_string: "test"
+env_ip: "${IP}"
 `
 
 func main() {
