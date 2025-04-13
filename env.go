@@ -19,7 +19,7 @@ func (e *Env[T]) UnmarshalYAML(n *yaml.Node) error {
 		return fmt.Errorf("expected string, got %q", n.Kind)
 	}
 
-	varValue, err := e.resolveVar(n.Value)
+	varValue, err := e.resolveVarValue(n.Value)
 	if err != nil {
 		return fmt.Errorf("resolve variable: %w", err)
 	}
@@ -43,7 +43,7 @@ func (e *Env[T]) UnmarshalJSON(data []byte) error {
 
 	v = strings.Trim(v, "\"")
 
-	varValue, err := e.resolveVar(v)
+	varValue, err := e.resolveVarValue(v)
 	if err != nil {
 		return fmt.Errorf("resolve variable: %w", err)
 	}
@@ -56,13 +56,12 @@ func (e *Env[T]) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (*Env[T]) resolveVar(v string) (string, error) {
-	if !strings.HasPrefix(v, "${") || !strings.HasSuffix(v, "}") {
+func (e *Env[T]) resolveVarValue(v string) (string, error) {
+	if !strings.HasPrefix(v, "$") {
 		return v, nil
 	}
 
-	varName := strings.TrimPrefix(v, "${")
-	varName = strings.TrimSuffix(varName, "}")
+	varName := e.resolveVarName(v)
 
 	val, ok := os.LookupEnv(varName)
 	if !ok {
@@ -70,4 +69,12 @@ func (*Env[T]) resolveVar(v string) (string, error) {
 	}
 
 	return val, nil
+}
+
+func (*Env[T]) resolveVarName(v string) string {
+	varName := strings.TrimPrefix(v, "$")
+	varName = strings.TrimPrefix(varName, "{")
+	varName = strings.TrimSuffix(varName, "}")
+
+	return varName
 }
