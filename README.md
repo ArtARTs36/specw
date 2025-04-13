@@ -17,7 +17,7 @@ import (
 type Config struct {
 	URL specw.URL `yaml:"url" json:"url"`
 	IP  specw.IP  `yaml:"ip" json:"ip"`
-	LogLevel slog.Level `yaml:"log_level" json:"log_level"`
+	LogLevel specw.SlogLevel `yaml:"log_level" json:"log_level"`
 }
 
 const content = `
