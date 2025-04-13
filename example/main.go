@@ -1,10 +1,3 @@
-# specw
-
-specw - **w**rappers for yaml/json **spec**ifications
-
-## Usage
-
-```go
 package main
 
 import (
@@ -15,8 +8,8 @@ import (
 )
 
 type Config struct {
-	URL specw.URL `yaml:"url" json:"url"`
-	IP  specw.IP  `yaml:"ip" json:"ip"`
+	URL      specw.URL  `yaml:"url" json:"url"`
+	IP       specw.IP   `yaml:"ip" json:"ip"`
 	LogLevel slog.Level `yaml:"log_level" json:"log_level"`
 }
 
@@ -33,4 +26,3 @@ func main() {
 
 	fmt.Println(cfg)
 }
-```
