@@ -10,6 +10,9 @@ type Config struct {
 	URL      specw.URL       `yaml:"url" json:"url"`
 	IP       specw.IP        `yaml:"ip" json:"ip"`
 	LogLevel specw.SlogLevel `yaml:"log_level" json:"log_level"`
+
+	EnvString specw.Env[string]   `yaml:"env_string"`
+	EnvIP     specw.Env[specw.IP] `yaml:"env_ip"`
 }
 
 const content = `
@@ -21,7 +24,7 @@ log_level: info
 func main() {
 	var cfg Config
 
-	yaml.Unmarshal([]byte(content), &cfg)
+	_ = yaml.Unmarshal([]byte(content), &cfg)
 
 	fmt.Println(cfg)
 }
