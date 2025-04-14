@@ -13,6 +13,8 @@ type Config struct {
 
 	EnvString specw.Env[string]   `yaml:"env_string"`
 	EnvIP     specw.Env[specw.IP] `yaml:"env_ip"`
+
+	Slice specw.OneOrMany[string] `yaml:"slice"`
 }
 
 const content = `
@@ -21,6 +23,7 @@ ip: 192.168.0.1
 log_level: info
 env_string: "test"
 env_ip: "${IP}"
+slice: abcd
 `
 
 func main() {
