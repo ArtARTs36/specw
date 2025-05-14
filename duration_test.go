@@ -34,7 +34,7 @@ func TestDuration_UnmarshalYAML(t *testing.T) {
 			Title:   "string: 5ms",
 			Content: "{interval: 5ms}",
 			Expected: Duration{
-				Value: time.Duration(5 * time.Millisecond),
+				Value: 5 * time.Millisecond,
 			},
 		},
 	}

@@ -54,6 +54,76 @@ func TestEnv_UnmarshallYAML(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, "http://google.ru", spec.Val.Value.String())
 	})
+
+	t.Run("float64: without env", func(t *testing.T) {
+		var spec struct {
+			Val Env[float64] `yaml:"val"`
+		}
+
+		err := yaml.Unmarshal([]byte("{val: 5.0}"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, float64(5), spec.Val.Value)
+	})
+
+	t.Run("float64: with env from int", func(t *testing.T) {
+		var spec struct {
+			Val Env[float64] `yaml:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "5")
+
+		err := yaml.Unmarshal([]byte("{ val: $SPECW_ENV_VAR }"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, float64(5), spec.Val.Value)
+	})
+
+	t.Run("float64: with env from float", func(t *testing.T) {
+		var spec struct {
+			Val Env[float64] `yaml:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "5.5")
+
+		err := yaml.Unmarshal([]byte("{ val: $SPECW_ENV_VAR }"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, 5.5, spec.Val.Value)
+	})
+
+	t.Run("int: with env", func(t *testing.T) {
+		var spec struct {
+			Val Env[int] `yaml:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "5")
+
+		err := yaml.Unmarshal([]byte("{ val: $SPECW_ENV_VAR }"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, 5, spec.Val.Value)
+	})
+
+	t.Run("false: with env", func(t *testing.T) {
+		var spec struct {
+			Val Env[bool] `yaml:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "false")
+
+		err := yaml.Unmarshal([]byte("{ val: $SPECW_ENV_VAR }"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, false, spec.Val.Value)
+	})
+
+	t.Run("true: with env", func(t *testing.T) {
+		var spec struct {
+			Val Env[bool] `yaml:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "true")
+
+		err := yaml.Unmarshal([]byte("{ val: $SPECW_ENV_VAR }"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, true, spec.Val.Value)
+	})
 }
 
 func TestEnv_UnmarshallJSON(t *testing.T) {
