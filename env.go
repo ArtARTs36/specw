@@ -53,12 +53,31 @@ func (e *Env[T]) UnmarshalJSON(data []byte) error {
 		return fmt.Errorf("resolve variable: %w", err)
 	}
 
-	err = json.Unmarshal([]byte(strconv.Quote(varValue)), &e.Value)
+	varValue = e.repairJSONValue(varValue)
+
+	err = json.Unmarshal([]byte(varValue), &e.Value)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (e *Env[T]) repairJSONValue(varValue string) string {
+	var instance T
+	expectedType := reflect.TypeOf(instance)
+
+	switch expectedType.Kind() { //nolint:exhaustive // not need
+	case reflect.Float64, reflect.Float32,
+		reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,
+		reflect.Bool:
+		// skip
+	default:
+		varValue = strconv.Quote(varValue)
+	}
+
+	return varValue
 }
 
 func (e *Env[T]) resolveVarValue(v string) (string, bool, error) {

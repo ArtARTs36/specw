@@ -2,9 +2,9 @@ package specw
 
 import (
 	"encoding/json"
-	"testing"
-
 	"gopkg.in/yaml.v3"
+	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -124,6 +124,18 @@ func TestEnv_UnmarshallYAML(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, true, spec.Val.Value)
 	})
+
+	t.Run("duration: with env", func(t *testing.T) {
+		var spec struct {
+			Val Env[Duration] `yaml:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "5s")
+
+		err := yaml.Unmarshal([]byte("{ val: $SPECW_ENV_VAR }"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, Duration{Value: 5 * time.Second}, spec.Val.Value)
+	})
 }
 
 func TestEnv_UnmarshallJSON(t *testing.T) {
@@ -169,6 +181,66 @@ func TestEnv_UnmarshallJSON(t *testing.T) {
 		err := json.Unmarshal([]byte("{\"val\": \"${SPECW_ENV_VAR}\"}"), &spec)
 		require.NoError(t, err)
 		assert.Equal(t, "http://google.ru", spec.Val.Value.String())
+	})
+
+	t.Run("float64: with env", func(t *testing.T) {
+		var spec struct {
+			Val Env[float64] `json:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "5")
+
+		err := json.Unmarshal([]byte("{\"val\": \"${SPECW_ENV_VAR}\"}"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, float64(5), spec.Val.Value)
+	})
+
+	t.Run("int: with env", func(t *testing.T) {
+		var spec struct {
+			Val Env[int] `json:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "5")
+
+		err := json.Unmarshal([]byte("{\"val\": \"${SPECW_ENV_VAR}\"}"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, 5, spec.Val.Value)
+	})
+
+	t.Run("false: with env", func(t *testing.T) {
+		var spec struct {
+			Val Env[bool] `json:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "false")
+
+		err := json.Unmarshal([]byte("{\"val\": \"${SPECW_ENV_VAR}\"}"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, false, spec.Val.Value)
+	})
+
+	t.Run("true: with env", func(t *testing.T) {
+		var spec struct {
+			Val Env[bool] `json:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "true")
+
+		err := json.Unmarshal([]byte("{\"val\": \"${SPECW_ENV_VAR}\"}"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, true, spec.Val.Value)
+	})
+
+	t.Run("duration: with env", func(t *testing.T) {
+		var spec struct {
+			Val Env[Duration] `json:"val"`
+		}
+
+		t.Setenv("SPECW_ENV_VAR", "5s")
+
+		err := json.Unmarshal([]byte("{\"val\": \"${SPECW_ENV_VAR}\"}"), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, Duration{Value: 5 * time.Second}, spec.Val.Value)
 	})
 }
 
