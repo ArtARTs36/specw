@@ -1,5 +1,9 @@
 # specw
 
+```
+go get github.com/artarts36/specw
+```
+
 specw - **w**rappers for yaml/json **spec**ifications
 
 ## Usage
