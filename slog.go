@@ -38,6 +38,10 @@ func (l *SlogLevel) UnmarshalJSON(data []byte) error {
 	return l.Value.UnmarshalJSON(data)
 }
 
+func (l *SlogLevel) UnmarshalText(text []byte) error {
+	return l.Value.UnmarshalText(text)
+}
+
 func (l *SlogLevel) String() string {
 	return l.Value.String()
 }
