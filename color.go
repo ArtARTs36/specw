@@ -13,13 +13,15 @@ import (
 )
 
 type Color struct {
-	Color color.RGBA
+	Color color.Color
 
 	Raw string
 }
 
 type HexColor struct {
-	Color color.RGBA
+	Color color.Color
+
+	Raw string
 }
 
 func (c *Color) UnmarshalYAML(n *yaml.Node) error {
@@ -63,6 +65,7 @@ func (c *HexColor) FromHex(hex string) error {
 		return err
 	}
 
+	c.Raw = hex
 	c.Color = *rgba
 
 	return nil
