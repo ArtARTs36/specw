@@ -73,15 +73,25 @@ func (c *HexColor) FromHex(hex string) error {
 
 func hexToRGBA(hex string) (*color.RGBA, error) {
 	const (
-		minHexLength = 4
-		maxHexLength = 7
+		minHexLength = 3
+		maxHexLength = 6
 	)
+
+	hex = strings.TrimPrefix(hex, "#")
 
 	if len(hex) < minHexLength {
 		return nil, errors.New("short hex string")
 	}
 	if len(hex) > maxHexLength {
 		return nil, errors.New("long hex string")
+	}
+
+	if len(hex) == minHexLength {
+		hex = fmt.Sprintf("%s%s%s%s%s%s",
+			string(hex[0]), string(hex[0]),
+			string(hex[1]), string(hex[1]),
+			string(hex[2]), string(hex[2]),
+		)
 	}
 
 	values, err := strconv.ParseUint(hex[1:], 16, 32)
