@@ -2,7 +2,9 @@ package specw
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"strconv"
 
 	"golang.org/x/image/colornames"
 	"gopkg.in/yaml.v3"
@@ -13,8 +15,6 @@ import (
 
 type Color struct {
 	Color color.Color
-
-	Raw string
 }
 
 func (c *Color) UnmarshalYAML(n *yaml.Node) error {
@@ -26,8 +26,6 @@ func (c *Color) UnmarshalYAML(n *yaml.Node) error {
 }
 
 func (c *Color) UnmarshalString(value string) error {
-	c.Raw = value
-
 	if strings.HasPrefix(value, "#") {
 		hc, err := hexToRGBA(value)
 		if err != nil {
@@ -59,4 +57,40 @@ func (c *Color) UnmarshalJSON(data []byte) error {
 	}
 
 	return c.UnmarshalString(s)
+}
+
+func hexToRGBA(hex string) (*color.RGBA, error) {
+	const (
+		minHexLength = 3
+		maxHexLength = 6
+	)
+
+	hex = strings.TrimPrefix(hex, "#")
+
+	if len(hex) < minHexLength {
+		return nil, errors.New("short hex string")
+	}
+	if len(hex) > maxHexLength {
+		return nil, errors.New("long hex string")
+	}
+
+	if len(hex) == minHexLength {
+		hex = fmt.Sprintf("%s%s%s%s%s%s",
+			string(hex[0]), string(hex[0]),
+			string(hex[1]), string(hex[1]),
+			string(hex[2]), string(hex[2]),
+		)
+	}
+
+	values, err := strconv.ParseUint(hex, 16, 32)
+	if err != nil {
+		return nil, err
+	}
+
+	return &color.RGBA{
+		R: uint8(values >> 16),         //nolint:mnd // not need
+		G: uint8((values >> 8) & 0xFF), //nolint:mnd // not need
+		B: uint8(values & 0xFF),        //nolint:mnd // not need
+		A: 255,                         //nolint:mnd // not need
+	}, nil
 }
