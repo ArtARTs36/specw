@@ -1,3 +1,5 @@
+check: lint test
+
 lint:
 	golangci-lint run --fix
 
