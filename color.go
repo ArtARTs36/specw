@@ -14,7 +14,7 @@ import (
 )
 
 type Color struct {
-	Color color.Color
+	Color color.RGBA
 }
 
 func (c *Color) UnmarshalYAML(n *yaml.Node) error {
@@ -57,6 +57,22 @@ func (c *Color) UnmarshalJSON(data []byte) error {
 	}
 
 	return c.UnmarshalString(s)
+}
+
+func (c Color) MarshalYAML() (interface{}, error) {
+	return c.Hex(), nil
+}
+
+func (c Color) MarshalJSON() ([]byte, error) {
+	return []byte(strconv.Quote(c.Hex())), nil
+}
+
+func (c *Color) MarshalBinary() ([]byte, error) {
+	return []byte(c.Hex()), nil
+}
+
+func (c *Color) Hex() string {
+	return fmt.Sprintf("#%02x%02x%02x", c.Color.R, c.Color.G, c.Color.B)
 }
 
 func hexToRGBA(hex string) (*color.RGBA, error) {

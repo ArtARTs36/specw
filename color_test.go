@@ -2,6 +2,8 @@ package specw
 
 import (
 	"encoding/json"
+	"gopkg.in/yaml.v3"
+	"image/color"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,6 +19,60 @@ func TestColor_UnmarshalJSON(t *testing.T) {
 		err := json.Unmarshal([]byte(`{"color":"red"}`), &cfg)
 		require.NoError(t, err)
 	})
+}
+
+func TestColor_Hex(t *testing.T) {
+	t.Run("#eeeeee", func(t *testing.T) {
+		rgba := color.RGBA{
+			R: 238,
+			G: 238,
+			B: 238,
+		}
+
+		c := &Color{
+			Color: rgba,
+		}
+
+		assert.Equal(t, "#eeeeee", c.Hex())
+	})
+}
+
+func TestColor_MarshalJSON(t *testing.T) {
+	var spec struct {
+		Color Color `json:"color"`
+	}
+
+	spec.Color = Color{
+		Color: color.RGBA{
+			R: 238,
+			G: 238,
+			B: 238,
+		},
+	}
+
+	specContent, err := json.Marshal(spec)
+	require.NoError(t, err)
+
+	assert.Equal(t, "{\"color\":\"#eeeeee\"}", string(specContent))
+}
+
+func TestColor_MarshalYAML(t *testing.T) {
+	var spec struct {
+		Color Color `yaml:"color"`
+	}
+
+	spec.Color = Color{
+		Color: color.RGBA{
+			R: 238,
+			G: 238,
+			B: 238,
+		},
+	}
+
+	specContent, err := yaml.Marshal(spec)
+	require.NoError(t, err)
+
+	assert.Equal(t, "color: '#eeeeee'\n", string(specContent))
 }
 
 func TestHexToRGBA(t *testing.T) {
