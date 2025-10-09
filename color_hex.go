@@ -68,7 +68,7 @@ func hexToRGBA(hex string) (*color.RGBA, error) {
 		)
 	}
 
-	values, err := strconv.ParseUint(hex[1:], 16, 32)
+	values, err := strconv.ParseUint(hex, 16, 32)
 	if err != nil {
 		return nil, err
 	}
