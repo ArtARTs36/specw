@@ -12,9 +12,13 @@ type Config struct {
 	LogLevel specw.SlogLevel `yaml:"log_level" json:"log_level"`
 
 	EnvString specw.Env[string]   `yaml:"env_string"`
-	EnvIP     specw.Env[specw.IP] `yaml:"env_ip"`
+	EnvIP     specw.Env[specw.IP] `yaml:"env_ip" json:"env_ip"`
 
-	Slice specw.OneOrMany[string] `yaml:"slice"`
+	Slice specw.OneOrMany[string] `yaml:"slice" json:"slice"`
+
+	Color specw.Color `yaml:"color" json:"color"`
+
+	Duration specw.Duration `yaml:"duration" json:"duration"`
 }
 
 const content = `

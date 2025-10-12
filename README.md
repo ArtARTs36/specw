@@ -4,7 +4,19 @@
 go get github.com/artarts36/specw
 ```
 
-specw - **w**rappers for yaml/json **spec**ifications
+specw - **w**rappers for yaml/json **spec**ifications for easy parsing and using.
+
+## Wrappers
+
+| Wrapper   | Description                                                          | Input examples                                          |
+|-----------|----------------------------------------------------------------------|---------------------------------------------------------|
+| Color     | Wrapper for _color.RGBA_                                             | `green`, `#eee`, `#cccccc`                              |
+| Duration  | Wrapper for _time.Duration_                                          | `500`, `5s`                                             |
+| Env       | Generic wrapper, which fetch value from environment variable         | `${MY_VAR}`, `my-value`                                 |
+| IP        | Wrapper for _net.IP_                                                 | `192.168.0.1`                                           |
+| OneOrMany | Generic wrapper that allows you to put one or more values into a key | Value or values: `key: {val: 1}` or `key: {val: [1,2]}` |
+| SlogLevel | Wrapper for _slog.Level_                                             | `error`, `warn`, `info`, `debug`                        |
+| URL       | Wrapper for _url.URL_                                                | `https://google.com`                                    |
 
 ## Usage
 

@@ -2,6 +2,7 @@ package specw
 
 import (
 	"encoding/json"
+	"errors"
 	"gopkg.in/yaml.v3"
 	"image/color"
 	"testing"
@@ -57,25 +58,37 @@ func TestColor_MarshalJSON(t *testing.T) {
 }
 
 func TestColor_MarshalYAML(t *testing.T) {
-	var spec struct {
-		Color Color `yaml:"color"`
-	}
+	t.Run("positive", func(t *testing.T) {
+		var spec struct {
+			Color Color `yaml:"color"`
+		}
 
-	spec.Color = Color{
-		Color: color.RGBA{
-			R: 238,
-			G: 238,
-			B: 238,
-		},
-	}
+		spec.Color = Color{
+			Color: color.RGBA{
+				R: 238,
+				G: 238,
+				B: 238,
+			},
+		}
 
-	specContent, err := yaml.Marshal(spec)
-	require.NoError(t, err)
+		specContent, err := yaml.Marshal(spec)
+		require.NoError(t, err)
 
-	assert.Equal(t, "color: '#eeeeee'\n", string(specContent))
+		assert.Equal(t, "color: '#eeeeee'\n", string(specContent))
+	})
 }
 
 func TestHexToRGBA(t *testing.T) {
+	t.Run("color is too short", func(t *testing.T) {
+		_, err := hexToRGBA("#e")
+		assert.Equal(t, errors.New("color is too short"), err)
+	})
+
+	t.Run("color is too long", func(t *testing.T) {
+		_, err := hexToRGBA("#eeeeeeeeeee")
+		assert.Equal(t, errors.New("color is too long"), err)
+	})
+
 	t.Run("#eee", func(t *testing.T) {
 		_, err := hexToRGBA("#eee")
 		require.NoError(t, err)
@@ -95,4 +108,15 @@ func TestHexToRGBA(t *testing.T) {
 
 		assert.Equal(t, first, second)
 	})
+}
+
+func TestColor_AsEEE(t *testing.T) {
+	col := Color{}
+
+	expected := Color{}
+	require.NoError(t, expected.UnmarshalString("#eee"))
+
+	col.AsEEE()
+
+	assert.Equal(t, expected.Hex(), col.Hex())
 }

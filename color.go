@@ -75,6 +75,16 @@ func (c *Color) Hex() string {
 	return fmt.Sprintf("#%02x%02x%02x", c.Color.R, c.Color.G, c.Color.B)
 }
 
+// AsEEE sets color #eeeeee.
+func (c *Color) AsEEE() {
+	c.Color = color.RGBA{
+		R: 238, //nolint:mnd // not need
+		G: 238, //nolint:mnd // not need
+		B: 238, //nolint:mnd // not need
+		A: 255, //nolint:mnd // not need
+	}
+}
+
 func hexToRGBA(hex string) (*color.RGBA, error) {
 	const (
 		minHexLength = 3
@@ -84,10 +94,10 @@ func hexToRGBA(hex string) (*color.RGBA, error) {
 	hex = strings.TrimPrefix(hex, "#")
 
 	if len(hex) < minHexLength {
-		return nil, errors.New("short hex string")
+		return nil, errors.New("color is too short")
 	}
 	if len(hex) > maxHexLength {
-		return nil, errors.New("long hex string")
+		return nil, errors.New("color is too long")
 	}
 
 	if len(hex) == minHexLength {
