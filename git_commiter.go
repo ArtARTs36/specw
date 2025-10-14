@@ -19,8 +19,7 @@ func (c *GitCommitter) String() string {
 }
 
 func (c *GitCommitter) UnmarshalYAML(n *yaml.Node) error {
-	switch n.Kind { //nolint:exhaustive // other yaml types not supported
-	case yaml.MappingNode:
+	if n.Kind == yaml.MappingNode {
 		var objectable struct {
 			Name  Env[string] `yaml:"name"`
 			Email Env[string] `yaml:"email"`
@@ -34,7 +33,9 @@ func (c *GitCommitter) UnmarshalYAML(n *yaml.Node) error {
 		c.Email = objectable.Email.Value
 
 		return nil
-	case yaml.ScalarNode:
+	}
+
+	if n.Kind == yaml.ScalarNode {
 		return c.UnmarshalString(n.Value)
 	}
 
