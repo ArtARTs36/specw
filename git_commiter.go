@@ -22,16 +22,16 @@ func (c *GitCommitter) UnmarshalYAML(n *yaml.Node) error {
 	switch n.Kind { //nolint:exhaustive // other yaml types not supported
 	case yaml.MappingNode:
 		var objectable struct {
-			Name  string `yaml:"name"`
-			Email string `yaml:"email"`
+			Name  Env[string] `yaml:"name"`
+			Email Env[string] `yaml:"email"`
 		}
 
 		if err := n.Decode(&objectable); err != nil {
 			return err
 		}
 
-		c.Name = objectable.Name
-		c.Email = objectable.Email
+		c.Name = objectable.Name.Value
+		c.Email = objectable.Email.Value
 
 		return nil
 	case yaml.ScalarNode:
@@ -47,16 +47,16 @@ func (c *GitCommitter) UnmarshalJSON(data []byte) error {
 	}
 
 	var objectable struct {
-		Name  string `json:"name"`
-		Email string `json:"email"`
+		Name  Env[string] `json:"name"`
+		Email Env[string] `json:"email"`
 	}
 
 	if err := json.Unmarshal(data, &objectable); err != nil {
 		return err
 	}
 
-	c.Name = objectable.Name
-	c.Email = objectable.Email
+	c.Name = objectable.Name.Value
+	c.Email = objectable.Email.Value
 
 	return nil
 }

@@ -65,7 +65,18 @@ func TestGitCommitterUnmarshalJSON(t *testing.T) {
 				Email: "user@mail.ru",
 			},
 		},
+		{
+			Title:   "parse with env",
+			Content: `{"committer": {"name": "${TEST_GIT_USER}", "email": "${TEST_GIT_EMAIL}"}}`,
+			Expected: &GitCommitter{
+				Name:  "name",
+				Email: "user@mail.ru",
+			},
+		},
 	}
+
+	t.Setenv("TEST_GIT_USER", "name")
+	t.Setenv("TEST_GIT_EMAIL", "user@mail.ru")
 
 	for _, c := range cases {
 		t.Run(c.Title, func(t *testing.T) {

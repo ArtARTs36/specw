@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/buildkite/interpolate"
 	"gopkg.in/yaml.v3"
 	"os"
 	"reflect"
@@ -15,19 +16,27 @@ type Env[T any] struct {
 	Value T
 }
 
+type interpolateEnv struct{}
+
+func (e interpolateEnv) Get(key string) (string, bool) {
+	return os.LookupEnv(key)
+}
+
 func (e *Env[T]) UnmarshalYAML(n *yaml.Node) error {
 	if n.Kind != yaml.ScalarNode {
 		return fmt.Errorf("expected string, got %q", n.Kind)
 	}
 
-	varValue, isVar, err := e.resolveVarValue(n.Value)
+	resolvedValue, err := interpolate.Interpolate(interpolateEnv{}, n.Value)
 	if err != nil {
-		return fmt.Errorf("resolve variable: %w", err)
+		return fmt.Errorf("interpolate value: %w", err)
 	}
 
-	n.Value = varValue
+	changed := n.Value != resolvedValue
 
-	if isVar {
+	n.Value = resolvedValue
+
+	if changed {
 		e.repairNode(n)
 	}
 
@@ -48,7 +57,7 @@ func (e *Env[T]) UnmarshalJSON(data []byte) error {
 
 	v = strings.Trim(v, "\"")
 
-	varValue, _, err := e.resolveVarValue(v)
+	varValue, err := interpolate.Interpolate(interpolateEnv{}, v)
 	if err != nil {
 		return fmt.Errorf("resolve variable: %w", err)
 	}
@@ -78,29 +87,6 @@ func (e *Env[T]) repairJSONValue(varValue string) string {
 	}
 
 	return varValue
-}
-
-func (e *Env[T]) resolveVarValue(v string) (string, bool, error) {
-	if !strings.HasPrefix(v, "$") {
-		return v, false, nil
-	}
-
-	varName := e.resolveVarName(v)
-
-	val, ok := os.LookupEnv(varName)
-	if !ok {
-		return "", true, fmt.Errorf("environment variable %s not found", varName)
-	}
-
-	return val, true, nil
-}
-
-func (*Env[T]) resolveVarName(v string) string {
-	varName := strings.TrimPrefix(v, "$")
-	varName = strings.TrimPrefix(varName, "{")
-	varName = strings.TrimSuffix(varName, "}")
-
-	return varName
 }
 
 func (e *Env[T]) repairNode(n *yaml.Node) {

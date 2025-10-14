@@ -243,30 +243,3 @@ func TestEnv_UnmarshallJSON(t *testing.T) {
 		assert.Equal(t, Duration{Value: 5 * time.Second}, spec.Val.Value)
 	})
 }
-
-func TestEnv_resolveVar(t *testing.T) {
-	tests := []struct {
-		Title    string
-		Input    string
-		Expected string
-	}{
-		{
-			Title:    "$VAR",
-			Input:    "$VAR",
-			Expected: "VAR",
-		},
-		{
-			Title:    "${VAR}",
-			Input:    "${VAR}",
-			Expected: "VAR",
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.Title, func(t *testing.T) {
-			env := &Env[string]{}
-
-			assert.Equal(t, test.Expected, env.resolveVarName(test.Input))
-		})
-	}
-}
