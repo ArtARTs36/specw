@@ -98,3 +98,7 @@ func (c *GitCommitter) UnmarshalString(val string) error {
 
 	return nil
 }
+
+func (c *GitCommitter) Valid() bool {
+	return c != nil && c.Name != "" && c.Email != ""
+}
