@@ -1,6 +1,7 @@
 package specw
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"gopkg.in/yaml.v3"
@@ -34,6 +35,21 @@ func (o *BoolObject[O]) UnmarshalYAML(n *yaml.Node) error {
 	}
 
 	return fmt.Errorf("unexpected type: %q", n.Kind)
+}
+
+func (o *BoolObject[O]) UnmarshalJSON(data []byte) error {
+	str := string(data)
+	switch str {
+	case "true":
+		var err error
+		o.Object, err = o.instance()
+		return err
+	case "false":
+		o.Object = nil
+		return nil
+	}
+
+	return json.Unmarshal(data, &o.Object)
 }
 
 func (o *BoolObject[O]) instance() (*O, error) {
