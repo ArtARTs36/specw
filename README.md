@@ -19,6 +19,7 @@ specw - **w**rappers for yaml/json **spec**ifications for easy parsing and using
 | URL         | Wrapper for _url.URL_                                                | `https://google.com`                                       |
 | GitCommiter | Wrapper for git commit author, includes name and email               | `name <user@mail.ru>`, `{name: name, email: user@mail.ru}` |
 | BoolObject  | Wrapper for bool or object                                           | `value: true`, `value: {name: name, email: user@mail.ru}`  |
+| EnvStrings  | Wrapper for strings with env expression                              | `value: a`, `value: $A`, `value: [a,$B]`                   |
 
 ## Usage
 

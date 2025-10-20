@@ -18,6 +18,8 @@ type Env[T any] struct {
 
 type interpolateEnv struct{}
 
+var interpolateEnvInstance = &interpolateEnv{}
+
 func (e interpolateEnv) Get(key string) (string, bool) {
 	return os.LookupEnv(key)
 }
@@ -27,7 +29,7 @@ func (e *Env[T]) UnmarshalYAML(n *yaml.Node) error {
 		return fmt.Errorf("expected string, got %q", n.Kind)
 	}
 
-	resolvedValue, err := interpolate.Interpolate(interpolateEnv{}, n.Value)
+	resolvedValue, err := interpolateEnvExpression(n.Value)
 	if err != nil {
 		return fmt.Errorf("interpolate value: %w", err)
 	}
@@ -57,7 +59,7 @@ func (e *Env[T]) UnmarshalJSON(data []byte) error {
 
 	v = strings.Trim(v, "\"")
 
-	varValue, err := interpolate.Interpolate(interpolateEnv{}, v)
+	varValue, err := interpolateEnvExpression(v)
 	if err != nil {
 		return fmt.Errorf("resolve variable: %w", err)
 	}
@@ -103,4 +105,8 @@ func (e *Env[T]) repairNode(n *yaml.Node) {
 	case reflect.Bool:
 		n.Tag = "!!bool"
 	}
+}
+
+func interpolateEnvExpression(expr string) (string, error) {
+	return interpolate.Interpolate(interpolateEnvInstance, expr)
 }
