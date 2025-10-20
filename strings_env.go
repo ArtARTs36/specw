@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/buildkite/interpolate"
 	"gopkg.in/yaml.v3"
+	"strings"
 )
 
 type EnvStrings struct {
@@ -20,7 +21,7 @@ func (s *EnvStrings) UnmarshalYAML(n *yaml.Node) error {
 			return fmt.Errorf("interpolate: %w", err)
 		}
 
-		s.Value = []string{v}
+		s.Value = strings.Split(v, ",")
 		return nil
 	case yaml.SequenceNode:
 		for _, child := range n.Content {
@@ -50,7 +51,7 @@ func (s *EnvStrings) UnmarshalJSON(n []byte) error {
 			return fmt.Errorf("interpolate: %w", err)
 		}
 
-		s.Value = []string{v}
+		s.Value = strings.Split(v, ",")
 		return nil
 	}
 

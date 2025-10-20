@@ -11,6 +11,18 @@ import (
 )
 
 func TestEnvStrings_UnmarshalYAML(t *testing.T) {
+	t.Run("scalar: separated one", func(t *testing.T) {
+		var spec struct {
+			Values EnvStrings `yaml:"values"`
+		}
+
+		content := "{values: 'a,b'}"
+
+		err := yaml.Unmarshal([]byte(content), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, []string{"a", "b"}, spec.Values.Value)
+	})
+
 	t.Run("scalar: simple one", func(t *testing.T) {
 		var spec struct {
 			Values EnvStrings `yaml:"values"`
@@ -79,6 +91,18 @@ func TestEnvStrings_UnmarshalYAML(t *testing.T) {
 }
 
 func TestEnvStrings_UnmarshalJSON(t *testing.T) {
+	t.Run("scalar: separated one", func(t *testing.T) {
+		var spec struct {
+			Values EnvStrings `json:"values"`
+		}
+
+		content := "{\"values\": \"a,b\"}"
+
+		err := json.Unmarshal([]byte(content), &spec)
+		require.NoError(t, err)
+		assert.Equal(t, []string{"a", "b"}, spec.Values.Value)
+	})
+
 	t.Run("scalar: simple one", func(t *testing.T) {
 		var spec struct {
 			Values EnvStrings `json:"values"`
