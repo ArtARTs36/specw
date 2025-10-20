@@ -13,7 +13,8 @@ type EnvStrings struct {
 }
 
 func (s *EnvStrings) UnmarshalYAML(n *yaml.Node) error {
-	if n.Kind == yaml.ScalarNode {
+	switch n.Kind { //nolint:exhaustive // other types not supported
+	case yaml.ScalarNode:
 		v, err := interpolate.Interpolate(interpolateEnv{}, n.Value)
 		if err != nil {
 			return fmt.Errorf("interpolate: %w", err)
@@ -21,7 +22,7 @@ func (s *EnvStrings) UnmarshalYAML(n *yaml.Node) error {
 
 		s.Value = []string{v}
 		return nil
-	} else if n.Kind == yaml.SequenceNode {
+	case yaml.SequenceNode:
 		for _, child := range n.Content {
 			v, err := interpolate.Interpolate(interpolateEnv{}, child.Value)
 			if err != nil {
