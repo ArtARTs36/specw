@@ -21,6 +21,10 @@ func (s *EnvStrings) UnmarshalYAML(n *yaml.Node) error {
 			return fmt.Errorf("interpolate: %w", err)
 		}
 
+		if len(v) == 0 {
+			return nil
+		}
+
 		s.Value = strings.Split(v, ",")
 		return nil
 	case yaml.SequenceNode:
@@ -49,6 +53,10 @@ func (s *EnvStrings) UnmarshalJSON(n []byte) error {
 		v, err := interpolate.Interpolate(interpolateEnv{}, v)
 		if err != nil {
 			return fmt.Errorf("interpolate: %w", err)
+		}
+
+		if len(v) == 0 {
+			return nil
 		}
 
 		s.Value = strings.Split(v, ",")

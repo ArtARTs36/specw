@@ -49,6 +49,18 @@ func TestEnvStrings_UnmarshalYAML(t *testing.T) {
 		assert.Equal(t, []string{"a"}, spec.Values.Value)
 	})
 
+	t.Run("scalar: env empty", func(t *testing.T) {
+		var spec struct {
+			Values EnvStrings `yaml:"values"`
+		}
+
+		content := "{values: $SPECW_ENV_VAR}"
+
+		err := yaml.Unmarshal([]byte(content), &spec)
+		require.NoError(t, err)
+		assert.Len(t, spec.Values.Value, 0)
+	})
+
 	t.Run("sequence: simple one", func(t *testing.T) {
 		var spec struct {
 			Values EnvStrings `yaml:"values"`
@@ -127,6 +139,18 @@ func TestEnvStrings_UnmarshalJSON(t *testing.T) {
 		err := json.Unmarshal([]byte(content), &spec)
 		require.NoError(t, err)
 		assert.Equal(t, []string{"a"}, spec.Values.Value)
+	})
+
+	t.Run("scalar: env empty", func(t *testing.T) {
+		var spec struct {
+			Values EnvStrings `json:"values"`
+		}
+
+		content := "{\"values\": \"$SPECW_ENV_VAR\"}"
+
+		err := json.Unmarshal([]byte(content), &spec)
+		require.NoError(t, err)
+		assert.Len(t, spec.Values.Value, 0)
 	})
 
 	t.Run("sequence: simple one", func(t *testing.T) {
