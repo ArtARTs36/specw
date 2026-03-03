@@ -18,14 +18,7 @@ func (u *URL) UnmarshalYAML(n *yaml.Node) error {
 		return fmt.Errorf("expected string, got %q", n.Kind)
 	}
 
-	value, err := url.Parse(n.Value)
-	if err != nil {
-		return fmt.Errorf("invalid url: %w", err)
-	}
-
-	u.Value = *value
-
-	return err
+	return u.UnmarshalString(n.Value)
 }
 
 func (u *URL) UnmarshalJSON(data []byte) error {
@@ -37,7 +30,15 @@ func (u *URL) UnmarshalJSON(data []byte) error {
 
 	v = strings.Trim(v, "\"")
 
-	value, err := url.Parse(v)
+	return u.UnmarshalString(v)
+}
+
+func (u *URL) String() string {
+	return u.Value.String()
+}
+
+func (u *URL) UnmarshalString(val string) error {
+	value, err := url.Parse(val)
 	if err != nil {
 		return fmt.Errorf("invalid url: %w", err)
 	}
@@ -47,6 +48,6 @@ func (u *URL) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (u *URL) String() string {
-	return u.Value.String()
+func (u *URL) UnmarshalBinary(val []byte) error {
+	return u.UnmarshalString(string(val))
 }

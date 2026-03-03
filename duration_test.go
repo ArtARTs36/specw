@@ -51,3 +51,43 @@ func TestDuration_UnmarshalYAML(t *testing.T) {
 		})
 	}
 }
+
+func TestDuration_UnmarshalString(t *testing.T) {
+	tests := []struct {
+		Title    string
+		Content  string
+		Expected Duration
+	}{
+		{
+			Title:   "int: 0",
+			Content: "0",
+			Expected: Duration{
+				Value: time.Duration(0),
+			},
+		},
+		{
+			Title:   "int: 5",
+			Content: "5",
+			Expected: Duration{
+				Value: time.Duration(5),
+			},
+		},
+		{
+			Title:   "string: 5ms",
+			Content: "5ms",
+			Expected: Duration{
+				Value: 5 * time.Millisecond,
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Title, func(t *testing.T) {
+			d := Duration{}
+
+			err := d.UnmarshalString(test.Content)
+			require.NoError(t, err)
+			assert.Equal(t, test.Expected, d)
+		})
+	}
+}
