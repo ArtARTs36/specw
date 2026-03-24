@@ -8,6 +8,7 @@ import (
 )
 
 type File struct {
+	Path    string
 	Content []byte
 }
 
@@ -23,7 +24,16 @@ func (f *File) UnmarshalYAML(n *yaml.Node) error {
 		return fmt.Errorf("read file %q: %w", path, err)
 	}
 
+	f.Path = path
 	f.Content = content
 
 	return nil
+}
+
+func (f *File) IsEmpty() bool {
+	return len(f.Content) == 0
+}
+
+func (f *File) String() string {
+	return string(f.Content)
 }
