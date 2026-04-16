@@ -41,6 +41,10 @@ func (f *JSONFile[T]) UnmarshalBinary(data []byte) error {
 	return f.UnmarshalString(string(data))
 }
 
+func (f *JSONFile[T]) UnmarshalText(text []byte) error {
+	return f.UnmarshalBinary(text)
+}
+
 func (f *JSONFile[T]) UnmarshalString(path string) error {
 	f.Path = path
 

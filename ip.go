@@ -38,6 +38,14 @@ func (i *IP) String() string {
 	return i.Value.String()
 }
 
+func (i *IP) UnmarshalBinary(bytes []byte) error {
+	return i.unmarshalString(string(bytes))
+}
+
+func (i *IP) UnmarshalText(bytes []byte) error {
+	return i.UnmarshalBinary(bytes)
+}
+
 func (i *IP) unmarshalString(value string) error {
 	addr, err := netip.ParseAddr(value)
 	if err != nil {

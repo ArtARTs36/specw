@@ -59,6 +59,10 @@ func (d *Duration) UnmarshalBinary(bytes []byte) error {
 	return d.UnmarshalString(string(bytes))
 }
 
+func (d *Duration) UnmarshalText(bytes []byte) error {
+	return d.UnmarshalBinary(bytes)
+}
+
 func (d *Duration) UnmarshalString(val string) error {
 	number, isNumber := extractNumber(val)
 	if isNumber {
