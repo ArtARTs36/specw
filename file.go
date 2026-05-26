@@ -7,9 +7,19 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+var fileReader = os.ReadFile
+
 type File struct {
 	Path    string
 	Content []byte
+}
+
+func SetFileReader(fn func(path string) ([]byte, error)) {
+	if fn == nil {
+		panic("specw: SetFileReader called with nil func")
+	}
+
+	fileReader = fn
 }
 
 func (f *File) UnmarshalYAML(n *yaml.Node) error {
@@ -19,7 +29,7 @@ func (f *File) UnmarshalYAML(n *yaml.Node) error {
 		return fmt.Errorf("parse file path: %w", err)
 	}
 
-	content, err := os.ReadFile(path)
+	content, err := fileReader(path)
 	if err != nil {
 		return fmt.Errorf("read file %q: %w", path, err)
 	}
@@ -28,6 +38,10 @@ func (f *File) UnmarshalYAML(n *yaml.Node) error {
 	f.Content = content
 
 	return nil
+}
+
+func (f *File) MarshalYAML() (interface{}, error) {
+	return f.Path, nil
 }
 
 func (f *File) IsEmpty() bool {
