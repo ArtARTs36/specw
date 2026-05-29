@@ -15,8 +15,8 @@ func (s *String) UnmarshalYAML(n *yaml.Node) error {
 	}
 
 	if n.Value == "" {
-		return errors.New("empty string")
+		return errors.New("provided empty string")
 	}
-	
+
 	return nil
 }
