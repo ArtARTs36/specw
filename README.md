@@ -40,7 +40,7 @@ package main
 import (
 	"fmt"
 	"github.com/artarts36/specw"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 )
 
 type Config struct {

@@ -7,7 +7,7 @@ import (
 	"net/netip"
 	"strings"
 
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 )
 
 type IP struct {
@@ -16,7 +16,7 @@ type IP struct {
 
 func (i *IP) UnmarshalYAML(n *yaml.Node) error {
 	if n.Kind != yaml.ScalarNode {
-		return fmt.Errorf("expected string, got %q", n.Kind)
+		return fmt.Errorf("expected string, got %q", n.Tag)
 	}
 
 	return i.unmarshalString(n.Value)

@@ -2,9 +2,10 @@ package specw
 
 import (
 	"encoding/json"
-	"gopkg.in/yaml.v3"
 	"testing"
 	"time"
+
+	"go.yaml.in/yaml/v3"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

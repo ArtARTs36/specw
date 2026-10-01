@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strconv"
 
+	"go.yaml.in/yaml/v3"
 	"golang.org/x/image/colornames"
-	"gopkg.in/yaml.v3"
 
 	"image/color"
 	"strings"
@@ -19,7 +19,7 @@ type Color struct {
 
 func (c *Color) UnmarshalYAML(n *yaml.Node) error {
 	if n.Kind != yaml.ScalarNode {
-		return fmt.Errorf("expected scalar node, got %q", n.Kind)
+		return fmt.Errorf("expected scalar node, got %q", n.Tag)
 	}
 
 	return c.UnmarshalString(n.Value)

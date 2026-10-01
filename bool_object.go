@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"gopkg.in/yaml.v3"
-	"reflect"
+    "reflect"
+
+	"go.yaml.in/yaml/v3"
 )
 
 type BoolObject[O any] struct {
@@ -34,7 +35,7 @@ func (o *BoolObject[O]) UnmarshalYAML(n *yaml.Node) error {
 		return nil
 	}
 
-	return fmt.Errorf("unexpected type: %q", n.Kind)
+	return fmt.Errorf("unexpected type: %q", n.Tag)
 }
 
 func (o *BoolObject[O]) UnmarshalJSON(data []byte) error {

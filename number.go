@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 )
 
 type PositiveNumber[T int | int32 | int64 | float32 | float64 | uint | uint8 | uint16 | uint32 | uint64 | time.Duration] struct { //nolint:lll // not need

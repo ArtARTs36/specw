@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/buildkite/interpolate"
-	"gopkg.in/yaml.v3"
 	"strings"
+
+	"github.com/buildkite/interpolate"
+	"go.yaml.in/yaml/v3"
 )
 
 type EnvStrings struct {
@@ -39,7 +40,7 @@ func (s *EnvStrings) UnmarshalYAML(n *yaml.Node) error {
 		return nil
 	}
 
-	return fmt.Errorf("unexpected node type: %q", n.Kind)
+	return fmt.Errorf("unexpected node type: %q", n.Tag)
 }
 
 func (s *EnvStrings) UnmarshalJSON(n []byte) error {

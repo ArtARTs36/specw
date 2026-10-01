@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"strings"
 
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 )
 
 type SlogLevel struct {
@@ -14,7 +14,7 @@ type SlogLevel struct {
 
 func (l *SlogLevel) UnmarshalYAML(n *yaml.Node) error {
 	if n.Kind != yaml.ScalarNode {
-		return fmt.Errorf("expected string, got %q", n.Kind)
+		return fmt.Errorf("expected string, got %q", n.Tag)
 	}
 
 	val, ok := l.mapValue(n.Value)

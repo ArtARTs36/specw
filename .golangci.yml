@@ -82,7 +82,7 @@ linters:
         - ^github.com/testcontainers/testcontainers-go.FromDockerfile$
         - ^golang.org/x/tools/go/analysis.Analyzer$
         - ^google.golang.org/protobuf/.+Options$
-        - ^gopkg.in/yaml.v3.Node$
+        - ^go.yaml.in/yaml/v3.Node$
     funlen:
       lines: 100
       statements: 50

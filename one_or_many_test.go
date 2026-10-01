@@ -2,10 +2,11 @@ package specw
 
 import (
 	"encoding/json"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gopkg.in/yaml.v3"
-	"testing"
+	"go.yaml.in/yaml/v3"
 )
 
 func TestOneOrMany_UnmarshalYAML(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 )
 
 type URL struct {
@@ -15,7 +15,7 @@ type URL struct {
 
 func (u *URL) UnmarshalYAML(n *yaml.Node) error {
 	if n.Kind != yaml.ScalarNode {
-		return fmt.Errorf("expected string, got %q", n.Kind)
+		return fmt.Errorf("expected string, got %q", n.Tag)
 	}
 
 	return u.UnmarshalString(n.Value)

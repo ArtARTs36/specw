@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/buildkite/interpolate"
-	"gopkg.in/yaml.v3"
 	"os"
 	"reflect"
 	"strconv"
 	"strings"
+
+	"github.com/buildkite/interpolate"
+	"go.yaml.in/yaml/v3"
 )
 
 type Env[T any] struct {
@@ -26,7 +27,7 @@ func (e interpolateEnv) Get(key string) (string, bool) {
 
 func (e *Env[T]) UnmarshalYAML(n *yaml.Node) error {
 	if n.Kind != yaml.ScalarNode {
-		return fmt.Errorf("expected string, got %q", n.Kind)
+		return fmt.Errorf("expected string, got %q", n.Tag)
 	}
 
 	resolvedValue, err := interpolateEnvExpression(n.Value)
